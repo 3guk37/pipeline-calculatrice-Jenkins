@@ -35,13 +35,11 @@ pipeline {
             steps {
                 dir(path: env.BUILD_ID) {
                     unstash(name: 'compiled-results')
-                    // Beachte die doppelten Anführungszeichen mit Backslash \"
-                    sh "docker run --rm -v \"\$(pwd)/sources\":/src ${IMAGE} pyinstaller -F prog.py"
+                    sh "docker run --rm -v '/var/jenkins_home/workspace/Pipeline script from SCM/${env.BUILD_ID}/sources':/src ${IMAGE} pyinstaller -F prog.py"
                 }
             }
             post {
                 success {
-                    // Auch hier müssen wir vorsichtig sein: Anführungszeichen helfen
                     archiveArtifacts "${env.BUILD_ID}/sources/dist/prog"
                     sh "rm -rf \"${env.BUILD_ID}/sources/build\" \"${env.BUILD_ID}/sources/dist\""
                 }
