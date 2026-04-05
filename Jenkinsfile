@@ -35,13 +35,15 @@ pipeline {
             steps {
                 dir(path: env.BUILD_ID) {
                     unstash(name: 'compiled-results')
+                    // WICHTIG: sh -c 'Befehl' muss in einfachen Quotes stehen
                     sh "docker run --rm -v \$(pwd)/sources:/src ${IMAGE} sh -c 'pyinstaller --onefile prog.py'"
                 }
             }
             post {
                 success {
-                    archiveArtifacts "${env.BUILD_ID}/sources/dist/prog"
-                    sh "rm -rf \"${env.BUILD_ID}/sources/build\" \"${env.BUILD_ID}/sources/dist\""
+                    // Wir archivieren das Ergebnis
+                    archiveArtifacts artifacts: "${env.BUILD_ID}/sources/dist/prog", fingerprint: true
+                    sh "rm -rf ${env.BUILD_ID}/sources/build ${env.BUILD_ID}/sources/dist"
                 }
             }
         }
