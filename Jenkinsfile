@@ -30,13 +30,13 @@ pipeline {
         stage('Deliver') {
             agent any
             environment {
-                VOLUME = "'${WORKSPACE}/${env.BUILD_ID}/sources':/src"
                 IMAGE = 'cdrx/pyinstaller-linux'
             }
             steps {
                 dir(path: env.BUILD_ID) {
                     unstash(name: 'compiled-results')
-                    sh "docker run --rm -v ${VOLUME} ${IMAGE} /usr/local/bin/pyinstaller -F prog.py"
+                    // Wir nutzen einfache Anführungszeichen (') für den Mount-Pfad innerhalb des Befehls
+                    sh "docker run --rm -v '${WORKSPACE}/${env.BUILD_ID}/sources':/src ${IMAGE} pyinstaller -F prog.py"
                 }
             }
             post {
