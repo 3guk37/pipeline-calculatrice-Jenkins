@@ -35,8 +35,7 @@ pipeline {
             steps {
                 dir(path: env.BUILD_ID) {
                     unstash(name: 'compiled-results')
-                    // Wir nutzen einfache Anführungszeichen (') für den Mount-Pfad innerhalb des Befehls
-                    sh "docker run --rm -v '${WORKSPACE}/${env.BUILD_ID}/sources':/src ${IMAGE} pyinstaller -F prog.py"
+                    sh "docker run --rm -v \$(pwd)/${env.BUILD_ID}/sources:/src ${IMAGE} pyinstaller -F prog.py"
                 }
             }
             post {
