@@ -35,7 +35,7 @@ pipeline {
             steps {
                 dir(path: env.BUILD_ID) {
                     unstash(name: 'compiled-results')
-                    sh "docker run --rm -v \$(pwd)/${env.BUILD_ID}/sources:/src ${IMAGE} pyinstaller -F prog.py"
+                    sh "docker run --rm -v \$(pwd)/sources:/src ${IMAGE} pyinstaller -F prog.py"
                 }
             }
             post {
